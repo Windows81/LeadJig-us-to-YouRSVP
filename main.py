@@ -9,7 +9,7 @@ def get_iden_list(database: DATABASE_TYPE, args):
     if mode == 'holes':
         return [
             i
-            for (beg, end) in database.get_holes()
+            for (beg, end, diff) in database.get_holes()
             for i in range(beg + 1, end)
         ]
 
@@ -61,7 +61,6 @@ if __name__ == "__main__":
     sub_iterate.add_argument("--stop", "-to", default=-1, required=False, type=int)
 
     sub_holes = subparser.add_parser('holes')
-    sub_holes.add_argument('--process-holes', action='store_true')
 
     sub_expand = subparser.add_parser('expand')
     mutex_expand = sub_expand.add_mutually_exclusive_group(required=True)

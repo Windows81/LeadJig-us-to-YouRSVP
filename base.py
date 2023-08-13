@@ -29,11 +29,11 @@ class database_base:
         ''').fetchone()
         return record[0] if record else None
 
-    def get_holes(self) -> list[tuple[int, int]]:
+    def get_holes(self) -> list[tuple[int, int, int]]:
         return self.database.execute(f'''
-            select prev_id, id from (
+            select prev_id, id, id - prev_id as diff from (
                 select id, lag(id) over (order by id) as prev_id from checked_ids
-            ) where id - prev_id > 1
+            ) where id - prev_id > 1 order by diff asc
         ''').fetchall()
 
     def commit(self):
