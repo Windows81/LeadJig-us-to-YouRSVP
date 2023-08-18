@@ -119,7 +119,7 @@ class leadjig_database(base.lambda_database):
             },
             'start_time': {
                 'func': lambda iden, data: [
-                    e['start_time'] for e in data['campaign']['events']
+                    e['start_time'].rstrip('Z') for e in data['campaign']['events']
                 ],
                 'type': 'string',
             },
@@ -231,7 +231,12 @@ class leadjig_scraper(base.scraper_base):
     @staticmethod
     def try_entry(iden: int):
         iden_str = leadjig_scraper._convert_id(iden)
-        res = requests.get(f'https://a9ssvdmczd.execute-api.us-east-1.amazonaws.com/production/campaigns/{iden_str}')
+        while True:
+            try:
+                res = requests.get(f'https://a9ssvdmczd.execute-api.us-east-1.amazonaws.com/production/campaigns/{iden_str}')
+                break
+            except requests.exceptions.ConnectionError:
+                pass
         if res.status_code == 404 or res.status_code >= 500:
             return None
         elif res.status_code == 200:
