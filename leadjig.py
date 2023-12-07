@@ -214,8 +214,11 @@ class leadjig_database(base.lambda_database):
 
 
 class leadjig_scraper(base.scraper_base):
-    RANGE_MIN, RANGE_MAX = 0, MAX_IDEN - 1
+    RANGE_MIN = 0
+    RANGE_MAX = MAX_IDEN - 1
+    DEFAULT_THREAD_COUNT = 3
 
+    @staticmethod
     def _convert_id(iden: int) -> str | None:
         arr = len(PARTS) * ['']
         for p in reversed(PARTS):

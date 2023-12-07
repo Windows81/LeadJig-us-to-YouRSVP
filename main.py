@@ -52,7 +52,7 @@ if __name__ == "__main__":
     )
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--threads", default=2, required=False, type=int)
+    parser.add_argument("--threads", default=SCRAPER_TYPE.DEFAULT_THREAD_COUNT, required=False, type=int)
     subparser = parser.add_subparsers(dest='mode')
 
     sub_iterate = subparser.add_parser('iterate')

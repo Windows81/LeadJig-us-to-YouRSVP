@@ -8,7 +8,7 @@ class database_base:
     def __init__(self, path: str = '.sqlite') -> None:
         self.database = sqlite3.connect(path)
         self.database.execute(
-            f'create table if not exists CHECKED_IDS (id integer primary key)',
+            'create table if not exists CHECKED_IDS (id integer primary key)',
         )
 
     def add_to_data(self, iden: int, data: dict | None) -> None:
@@ -18,7 +18,7 @@ class database_base:
         self.database.commit()
 
     def get_min(self) -> int | None:
-        record = self.database.execute(f'''
+        record = self.database.execute('''
             select id as I from CHECKED_IDS order by I asc limit 1
         ''').fetchone()
         return record[0] if record else None
@@ -58,7 +58,7 @@ class lambda_database(database_base):
     def __do_lambda(func, iden: int, data: dict | None) -> list[str]:
         try:
             return func(iden, data)
-        except Exception as e:
+        except Exception as _:
             return []
 
     def add_to_data(self, iden: int, data: dict | None) -> None:
@@ -92,7 +92,8 @@ class lambda_database(database_base):
 
 
 class scraper_base:
-    RANGE_MIN, RANGE_MAX = 1, float('inf')
+    RANGE_MIN = 1
+    RANGE_MAX = float('inf')
 
     @staticmethod
     def try_entry(iden: int) -> typing.Any | None:
@@ -120,7 +121,7 @@ class scraper_base:
             threading.Thread(
                 target=__thread_body,
                 args=[
-                    self.__process(iden_list[o:-1:thread_count]),
+                    self.__process(iden_list[o::thread_count]),
                 ],
             )
             for o in range(0, thread_count)
