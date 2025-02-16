@@ -2,11 +2,15 @@ from collections import deque
 import threading
 import sqlite3
 import typing
+import time
 
 
 class database_base:
+    INIT_STATEMENTS: str
+
     def __init__(self, path: str = '.sqlite') -> None:
         self.database = sqlite3.connect(path)
+        self.database.execute(self.INIT_STATEMENTS)
         self.database.execute(
             'create table if not exists CHECKED_IDS (id integer primary key)',
         )
@@ -172,7 +176,7 @@ class scraper_base:
         try:
             while self.thread_count > 0:
                 while len(self.queue) == 0:
-                    pass
+                    time.sleep(0.01)
                 self.queue_pop()
 
         except KeyboardInterrupt:

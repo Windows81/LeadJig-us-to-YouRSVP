@@ -6,4 +6,8 @@ Reserve other people's events! This is perfect for people who like listening to 
 
 To access an event page through LeadJig, consult the included `.sqlite` file and navigate to the relevant `https://yoursvp.com/{LURE.lure_id}`.
 
-As of 2023-08-24, verified to be a somewhat successful means to get free food, though not regular enough to sustain for long.
+As of 2023-08-24, verified to be a somewhat successful means to get free food, though events don't happen regularly enough to sustain for long.
+
+```
+python main.py iterate
+```

@@ -39,6 +39,9 @@ for c in CHOICE_COUNTS:
 
 
 class leadjig_database(base.lambda_database):
+    INIT_STATEMENTS = """
+        create view if not exists JOINED as select * from CAMPAIGNS natural join EVENTS natural join LURES natural join ADVISORS where length(lures.code) = 6;
+    """
     SCHEMA = {
         'CAMPAIGNS': {
             'mapped_id': {
@@ -119,6 +122,7 @@ class leadjig_database(base.lambda_database):
             },
             'start_time': {
                 'func': lambda iden, data: [
+                    # Event timestamps are local time; misleading to include `Z`.
                     e['start_time'].rstrip('Z') for e in data['campaign']['events']
                 ],
                 'type': 'string',
